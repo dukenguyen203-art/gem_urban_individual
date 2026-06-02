@@ -1,0 +1,27 @@
+-- Validate data types in bronze_trips table against expected schema.
+-- Returns only columns where the actual data type does not match the expected type.
+
+{{ config(severity='warn') }}
+
+SELECT *
+FROM information_schema.columns
+WHERE table_name = 'bronze_trips'
+AND (
+    (column_name = 'route_id' AND data_type != 'text')
+    OR
+    (column_name = 'service_id' AND data_type != 'text')
+    OR
+    (column_name = 'trip_id' AND data_type != 'text')
+    OR
+    (column_name = 'shape_id' AND data_type != 'text')
+    OR
+    (column_name = 'trip_headsign' AND data_type != 'text')
+    OR
+    (column_name = 'direction_id' AND data_type != 'integer')
+    OR
+    (column_name = 'block_id' AND data_type != 'double precision')
+    OR
+    (column_name = 'wheelchair_accessible' AND data_type != 'integer')
+    OR
+    (column_name = 'bikes_allowed' AND data_type != 'integer')
+)

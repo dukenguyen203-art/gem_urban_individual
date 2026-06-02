@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: bronze_trips
+    description: Validates the Bronze GTFS trips dataset by enforcing
+      required fields, uniqueness, and accepted values.
+
+    columns:
+
+      - name: route_id
+        tests:
+          - not_null
+
+      - name: service_id
+        tests:
+          - not_null
+
+      - name: trip_id
+        tests:
+          - not_null
+          - unique
+
+      - name: shape_id
+        tests:
+          - not_null
+
+      - name: trip_headsign
+        tests:
+          - not_null
+
+      - name: direction_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+      - name: wheelchair_accessible
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1]
+
+      - name: bikes_allowed
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2]

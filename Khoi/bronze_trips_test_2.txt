@@ -1,0 +1,7 @@
+-- Validate total row count in bronze_trips table.
+-- Returns a result only if the row count does not equal 33,947 (as shown in the data profiling).
+
+SELECT
+    COUNT(*) AS actual_count
+FROM {{ ref('bronze_trips') }}
+HAVING COUNT(*) != 33947
