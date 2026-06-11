@@ -1,0 +1,66 @@
+Insight 1: stops contains multiple entity types, not just stops
+
+The table contains:
+
+stations
+platforms
+rail replacement bus stops
+entrances/exits
+lifts
+concourse/access nodes
+kiss & ride / park & ride / connection nodes
+
+So a clean Silver model must not treat every row as the same kind of stop.
+
+Insight 2: parent_station is the station grouping key
+
+Filling null parent_station with stop_id creates a reliable station grouping key:
+
+parent_station_id
+
+This supports station-level aggregation such as:
+
+number of platforms
+number of entrances
+number of lifts
+number of connection points
+station URL
+Insight 3: platform_code identifies operational boarding locations
+
+Rows used in train trips appear to have non-null platform_code.
+
+This makes platform_code a strong indicator of:
+
+location_type = 0
+
+and supports separating train platforms from station access/navigation nodes.
+
+Insight 4: URL is station-level, not platform-level
+
+Each parent station has only one distinct stop_url.
+
+Therefore, stop_url can be safely promoted to a station-level attribute.
+
+Insight 5: Parent stations are not operational stop events
+
+Parent station rows do not appear in stop_times, transfers, or pathways.
+
+This confirms:
+
+parent station = grouping/master station entity
+child rows = operational or physical/access records
+Insight 6: Some rows are pathway/navigation nodes
+
+Rows with null platform_code and null location_type do not appear in stop_times or transfers but do appear in pathways.
+
+This proves they are not boarding stops. They should be treated as:
+
+entrance/exit or generic node
+
+depending on pattern.
+
+Insight 7: stop_headsign is low-value/redundant
+
+Most meaningful headsign information is already in trips.trip_headsign.
+
+So removing stop_headsign from silver_stop_times is justified.
