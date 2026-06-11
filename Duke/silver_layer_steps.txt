@@ -1,0 +1,37 @@
+suitable data types will be enforced for each column in all tables
+
+silver_routes:
+-'aus:vic:vic-02-CCL:' and 'aus:vic:vic-02-CCL-R:' have null route_long_name, these rows represent the City Circle routes
+-'aus:vic:vic-02-RCE-R:' has route_long_name that is inconsistent with the naming pattern of other routes.
+- we need both route_long_name and route_short_name to fully understand the route
+- routes with route_id ending with '-R' represent the associated replacement bus route.
+
+silver_stops:
+-all rows will non-null platform_code will have a location_type of '0'
+-all rows with stop_id contains 'EN*' with * is a number will have location_type of '2' as they represent station entrance
+-all rows with 'LI*' and is wheelchair-accessible will also have location_type of '2'
+-all other rows will have a location stop of 3
+-all rows with null parent_station will be excluded
+-stop_url column will be excluded as it associate with the station, not 
+the stop
+
+silver_stations:
+-all rows from bronze_stops with null parent_station (they all have location_type of 1 indicating that they are stations)
+-stop_id will be renamed to station_id
+-stop_url will be populated and rename to station url 
+-stop_lon, stop_lat will be renamed accordingly
+-location_type and wheelchair_boarding remain as is
+-no_platforms, no_entrances_exits, no_lifts, and no_connection_pts count number of platforms, entrances, lifts, connection points related to each station 
+
+silver_transfers table:
+- remove min_transfer_time -> all null column
+- remove transfer type -> unnecessary
+
+silver_routes table: 
+- remove agency column, 
+- reconfigure route_long_name, route_short_name, full name (city cirle)
+
+silver_shapes, silver_pathways, silver_calendar, silver_stop_times, silver_calendar_dates tables remain as-is
+
+
+
